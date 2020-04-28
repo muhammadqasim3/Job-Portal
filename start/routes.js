@@ -1,0 +1,36 @@
+'use strict'
+
+/*
+|--------------------------------------------------------------------------
+| Routes
+|--------------------------------------------------------------------------
+|
+| Http routes are entry points to your web application. You can create
+| routes for different URL's and bind Controller actions to them.
+|
+| A complete guide on routing is available here.
+| http://adonisjs.com/docs/4.1/routing
+|
+*/
+
+/** @type {typeof import('@adonis js/framework/src/Route/Manager')} */
+const Route = use('Route')
+
+Route.get('/', 'JobController.index');
+
+Route.on('/signup').render('auth.signup');
+Route.post('/signup', 'UserController.signup').validator('CreateUser');
+
+Route.on('/login').render('auth.login');
+Route.post('/login', 'UserController.login').validator('LoginUser');
+
+Route.get('/logout', async ({auth, response}) => {
+    await auth.logout();
+    return response.redirect('/');
+})
+
+Route.get('/post-a-job', 'JobController.userIndex'); //get user specific jobs
+Route.post('/post-a-job', 'JobController.create').validator('CreateJob');
+Route.get('/post-a-job/delete/:id', 'JobController.delete');
+Route.get('/post-a-job/edit/:id', 'JobController.edit');
+Route.post('/post-a-job/update/:id', 'JobController.update').validator('CreateJob');
